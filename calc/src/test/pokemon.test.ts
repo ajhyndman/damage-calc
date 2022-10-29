@@ -113,6 +113,35 @@ describe('Pokemon', () => {
     expect(p.hasType('Ice')).toBe(false);
   });
 
+  test('clone', () => {
+    const p = new Pokemon(7, 'Suicune', {
+      types: ['Fire'],
+      level: 50,
+      ability: 'Inner Focus',
+      item: 'Leftovers',
+      nature: 'Bold',
+      ivs: {spa: 30},
+      evs: {spd: 4, def: 252, hp: 252},
+      boosts: {atk: -1, spa: 2, spd: 1},
+      curHP: 60,
+      status: 'tox',
+      toxicCounter: 2,
+      moves: ['Surf', 'Rest', 'Curse', 'Sleep Talk'],});
+    const q = p.clone();
+
+    expect(q.name).toBe('Suicune');
+    expect(q.types).toEqual(['Fire']);
+    expect(q.weightkg).toBe(187.0);
+    expect(q.level).toBe(50);
+    expect(q.gender).toBe('N');
+    expect(q.item).toBe('Leftovers');
+    expect(q.ability).toBe('Inner Focus');
+    expect(q.nature).toBe('Bold');
+    expect(q.status).toBe('tox');
+    expect(q.toxicCounter).toBe(2);
+    expect(q.curHP()).toBe(60);
+  })
+
   test('Gigantamx weights', () => {
     expect(new Pokemon(8, 'Venusaur-Gmax').weightkg).toBe(100);
     expect(new Pokemon(8, 'Venusaur-Gmax', {isDynamaxed: true}).weightkg).toBe(0);
