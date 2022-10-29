@@ -39,6 +39,7 @@ export class Pokemon implements State.Pokemon {
     gen: I.Generation,
     name: string,
     options: Partial<State.Pokemon> & {
+      types?: [I.TypeName] | [I.TypeName, I.TypeName];
       curHP?: number;
       ivs?: Partial<I.StatsTable> & {spc?: number};
       evs?: Partial<I.StatsTable> & {spc?: number};
@@ -49,7 +50,7 @@ export class Pokemon implements State.Pokemon {
 
     this.gen = gen;
     this.name = options.name || name as I.SpeciesName;
-    this.types = this.species.types;
+    this.types = options.types || this.species.types;
     this.isDynamaxed = !!options.isDynamaxed;
     this.weightkg = this.species.weightkg;
     // Gigantamax 'forms' inherit weight from their base species when not dynamaxed
@@ -134,6 +135,7 @@ export class Pokemon implements State.Pokemon {
 
   clone() {
     return new Pokemon(this.gen, this.name, {
+      types: this.types,
       level: this.level,
       ability: this.ability,
       abilityOn: this.abilityOn,
