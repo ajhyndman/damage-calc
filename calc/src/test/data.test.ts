@@ -12,7 +12,6 @@ const gens = [1, 2, 3, 4, 5, 6, 7, 8, 9] as I.GenerationNum[];
 describe('Generations', () => {
   test('abilities', () => {
     for (const gen of gens) {
-      if (gen === 9) continue; // TODO fix gen 9 data to match PS data
       const p = Array.from(pkmn.Generations.get(gen).abilities);
       const c = new Map<I.ID, I.Ability>();
       for (const ability of calc.Generations.get(gen).abilities) c.set(ability.id, ability);
@@ -28,7 +27,6 @@ describe('Generations', () => {
 
   test('items', () => {
     for (const gen of gens) {
-      if (gen === 9) continue; // TODO fix gen 9 data to match PS data
       const p = Array.from(pkmn.Generations.get(gen).items);
       const c = new Map<I.ID, I.Item>();
       for (const item of calc.Generations.get(gen).items) c.set(item.id, item);
@@ -42,7 +40,7 @@ describe('Generations', () => {
     }
   });
 
-  test.skip('moves', () => {
+  test('moves', () => {
     for (const gen of gens) {
       const p = Array.from(pkmn.Generations.get(gen).moves);
       const c = new Map<I.ID, I.Move>();
@@ -50,7 +48,13 @@ describe('Generations', () => {
 
       expect(Array.from(c.values()).map(s => s.name).sort()).toEqual(p.map(s => s.name).sort());
       for (const move of p) {
-        expect(c.get(move.id)).toEqual(move);
+        // Formerly toEqual, relax a bit so the calc can have properties aren't in pkmn/dex.
+        for (const [k, v] of Object.entries(move)) {
+          if (v === undefined) {
+            delete (move as any)[k];
+          }
+        }
+        expect(c.get(move.id)).toMatchObject(move);
         c.delete(move.id);
       }
       expect(c.size).toBe(0);
@@ -59,7 +63,6 @@ describe('Generations', () => {
 
   test('species', () => {
     for (const gen of gens) {
-      if (gen === 9) continue; // TODO fix gen 9 data to match PS data
       const p = Array.from(pkmn.Generations.get(gen).species);
       const c = new Map<I.ID, I.Specie>();
       for (const specie of calc.Generations.get(gen).species) c.set(specie.id, specie);

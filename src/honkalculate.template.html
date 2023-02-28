@@ -391,6 +391,14 @@
                             <label>Ability</label>
                             <select class="ability terrain-trigger"></select>
                             <input hidden type="checkbox" title= "Is this ability active?" class="abilityToggle">
+									 <select hidden aria-label="Allies fainted" class="alliesFainted calc-trigger">
+										  <option value="0">Zero allies fainted</option>
+										  <option value="1">One ally fainted</option>
+										  <option value="2">Two allies fainted</option>
+										  <option value="3">Three allies fainted</option>
+										  <option value="4">Four allies fainted</option>
+										  <option value="5">Five allies fainted</option>
+									 </select>
                         </div>
                         <div class="gen-specific g2 g3 g4 g5 g6 g7 g8 g9">
                             <label>Item</label>
@@ -581,7 +589,7 @@
             <div id="collapseTwo" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="gen-specific g3 g4 g5 g6 g7 g8 g9" style="width: 10.6em; margin: 0 auto 5px;" title="Select the battle format.">
-                        <input class="visually-hidden" type="radio" name="format" value="Singles" id="singles-format" checked="checked" />
+                        <input class="visually-hidden" type="radio" name="format" value="Singles" id="singles-format" />
                         <label class="btn btn-left" for="singles-format">Singles</label>
                         <input class="visually-hidden" type="radio" name="format" value="Doubles" id="doubles-format" />
                         <label class="btn btn-right" for="doubles-format">Doubles</label>
@@ -594,6 +602,17 @@
                     <div class="gen-specific g7 g8 g9" title="Select the current terrain.">
                         <input class="visually-hidden terrain-trigger calc-trigger" type="checkbox" name="terrain" value="Psychic" id="psychic" /><label class="btn btn-xxxwide btn-mid" for="psychic">Psychic Terrain</label>
                     </div>
+						  <div aria-labelledby="selectRuinInstruction" class="gen-specific g9 format-specific doubles" role="group" style="margin: 5px auto auto;" title="Select the ruin abilities from other Pok&eacute;mon on the field.">
+								<span class="visually-hidden" id="selectRuinInstruction">Select the active Ruin abilities from other Poke&eacute;mon on the field.</span>
+								<input class="visually-hidden calc-trigger" type="checkbox" name="ruin" value="Beads" id="beads" />
+								<label class="btn btn-xxxwide btn-left" for="beads">Beads of Ruin</label>
+								<input class="visually-hidden calc-trigger" type="checkbox" name="ruin" value="Tablets" id="tablets" />
+								<label class="btn btn-xxxwide btn-mid" for="tablets">Tablets of Ruin</label>
+								<input class="visually-hidden calc-trigger" type="checkbox" name="ruin" value="Sword" id="sword" />
+								<label class="btn btn-xxxwide btn-right" for="sword">Sword of Ruin</label>
+								<input class="visually-hidden calc-trigger" type="checkbox" name="ruin" value="Vessel" id="vessel" />
+								<label class="btn btn-xxxwide btn-mid" for="vessel">Vessel of Ruin</label>
+						  </div>
                     <hr class="gen-specific g6 g7 g8 g9" />
                     <div class="gen-specific g3 g4 g5 g6 g7 g8 g9" style="width: 22.2em; margin: 5px auto;" title="Select the current weather condition.">
                         <input class="visually-hidden" type="radio" name="weather" value="" id="clear" checked="checked" />
@@ -851,6 +870,7 @@
     <script type="text/javascript" src="./calc/util.js?"></script>
     <script type="text/javascript" src="./calc/stats.js?"></script>
     <script type="text/javascript" src="./calc/data/species.js?"></script>
+    <script type="text/javascript" src="./js/data/sets/gen9.js?"></script>
     <script type="text/javascript" src="./js/data/sets/gen8.js?"></script>
     <script type="text/javascript" src="./js/data/sets/gen7.js?"></script>
     <script type="text/javascript" src="./js/data/sets/gen6.js?"></script>
@@ -870,7 +890,7 @@
     <script type="text/javascript" src="./calc/field.js?"></script>
     <script type="text/javascript" src="./calc/items.js?"></script>
     <script type="text/javascript" src="./calc/mechanics/util.js?"></script>
-    <script type="text/javascript" src="./calc/mechanics/gen78.js?"></script>
+    <script type="text/javascript" src="./calc/mechanics/gen789.js?"></script>
     <script type="text/javascript" src="./calc/mechanics/gen56.js?"></script>
     <script type="text/javascript" src="./calc/mechanics/gen4.js?"></script>
     <script type="text/javascript" src="./calc/mechanics/gen3.js?"></script>
@@ -883,7 +903,7 @@
     <script type="text/javascript" src="./js/shared_controls.js?"></script>
     <script type="text/javascript" src="./js/honkalculate_controls.js?"></script>
 
-    <div style="clear:both;padding:20px;text-align:left">Created by Honko, maintained by Austin
+    <div style="clear:both;padding:20px;text-align:left">Created by Honko, maintained by Austin and Kris
         <ul><li><a href="https://github.com/smogon/damage-calc/contributors" target="_blank">Contributors</a></li>
         <li><a href="https://www.smogon.com/forums/threads/pok%C3%A9mon-showdown-damage-calculator.3593546/" target="_blank">Bug Reports</a></li>
         <li><a href="https://github.com/smogon/damage-calc" target="_blank">GitHub repository</a></li></ul>

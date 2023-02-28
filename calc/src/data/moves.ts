@@ -39,6 +39,7 @@ export interface MoveData {
   readonly isSound?: boolean;
   readonly isPulse?: boolean;
   readonly isSlicing?: boolean;
+  readonly isWind?: boolean;
 }
 
 const RBY: {[name: string]: MoveData} = {
@@ -119,7 +120,7 @@ const RBY: {[name: string]: MoveData} = {
   Sludge: {bp: 65, type: 'Poison'},
   'Soft-Boiled': {bp: 0, category: 'Status', type: 'Normal'},
   'Solar Beam': {bp: 120, type: 'Grass'},
-  'Sonic Boom': {bp: 0, type: 'Normal'},
+  'Sonic Boom': {bp: 1, type: 'Normal'},
   'Spike Cannon': {bp: 20, type: 'Normal', multihit: [2, 5]},
   Stomp: {bp: 65, type: 'Normal'},
   Struggle: {bp: 50, type: 'Normal', recoil: [1, 2]},
@@ -228,6 +229,7 @@ const GSC_PATCH: {[name: string]: DeepPartial<MoveData>} = {
   'Night Shade': {bp: 0},
   'Sand Attack': {type: 'Ground'},
   'Seismic Toss': {bp: 0},
+  'Sonic Boom': {bp: 0},
   'Super Fang': {bp: 0},
   'Wing Attack': {bp: 60},
   Aeroblast: {bp: 100, type: 'Flying'},
@@ -4149,15 +4151,34 @@ for (const m of LGPE_MOVES) {
 
 const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
   'Aerial Ace': {isSlicing: true},
-  'Air Cutter': {isSlicing: true},
+  'Air Cutter': {isSlicing: true, isWind: true},
   'Air Slash': {isSlicing: true},
-  'Fury Cuttter': {isSlicing: true},
+  'Behemoth Blade': {isSlicing: true},
+  Blizzard: {isWind: true},
+  'Cross Poison': {isSlicing: true},
+  Cut: {isSlicing: true},
+  'Fairy Wind': {isWind: true},
+  'Fury Cutter': {isSlicing: true},
+  'Glacial Lance': {bp: 120, zp: 190},
+  'Grassy Glide': {bp: 60, zp: 120, maxPower: 110},
+  Gust: {isWind: true},
+  'Heat Wave': {isWind: true},
+  Hurricane: {isWind: true},
+  'Icy Wind': {isWind: true},
   'Leaf Blade': {isSlicing: true},
   'Night Slash': {isSlicing: true},
+  'Petal Blizzard': {isWind: true},
   'Psycho Cut': {isSlicing: true},
+  'Razor Leaf': {isSlicing: true},
   'Razor Shell': {isSlicing: true},
   'Sacred Sword': {isSlicing: true},
+  Sandstorm: {isWind: true},
   Slash: {isSlicing: true},
+  'Solar Blade': {isSlicing: true},
+  Tailwind: {isWind: true},
+  Twister: {isWind: true},
+  Whirlwind: {isWind: true},
+  'Wicked Blow': {bp: 75, zp: 140},
   'X-Scissor': {isSlicing: true},
   'Aqua Cutter': {
     bp: 70,
@@ -4171,10 +4192,10 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     bp: 80,
     type: 'Water',
     category: 'Physical',
-    secondaries: true,
     zp: 160,
     maxPower: 130,
-    self: {boosts: {spe: +1}},
+    secondaries: true,
+    makesContact: true,
   },
   'Armor Cannon': {
     bp: 120,
@@ -4182,7 +4203,6 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     category: 'Special',
     zp: 190,
     maxPower: 140,
-    self: {boosts: {def: -1, spd: -1}},
   },
   'Axe Kick': {
     bp: 120,
@@ -4191,8 +4211,16 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 190,
     maxPower: 95,
     secondaries: true,
-    recoil: [1, 2],
+    hasCrashDamage: true,
     makesContact: true,
+  },
+  'Barb Barrage': {
+    bp: 60,
+    type: 'Poison',
+    category: 'Physical',
+    zp: 120,
+    maxPower: 80,
+    secondaries: true,
   },
   'Bitter Blade': {
     bp: 90,
@@ -4200,7 +4228,17 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     category: 'Physical',
     zp: 175,
     maxPower: 130,
-    makesContact: true, // TODO add recovery [50%]
+    makesContact: true,
+    isSlicing: true,
+    drain: [1, 2],
+  },
+  'Bitter Malice': {
+    bp: 75,
+    type: 'Ghost',
+    category: 'Special',
+    zp: 140,
+    maxPower: 130,
+    secondaries: true,
   },
   'Blazing Torque': {
     bp: 80,
@@ -4208,6 +4246,26 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     category: 'Physical',
     zp: 160,
     maxPower: 130,
+    secondaries: true,
+  },
+  'Bleakwind Storm': {
+    bp: 100,
+    type: 'Flying',
+    category: 'Special',
+    zp: 180,
+    maxPower: 130,
+    secondaries: true,
+    isWind: true,
+    target: 'allAdjacentFoes',
+  },
+  'Ceaseless Edge': {
+    bp: 65,
+    type: 'Dark',
+    category: 'Physical',
+    zp: 120,
+    maxPower: 120,
+    makesContact: true,
+    isSlicing: true,
     secondaries: true,
   },
   'Chilling Water': {
@@ -4222,6 +4280,14 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     bp: 0,
     type: 'Ice',
     category: 'Status',
+  },
+  'Chloroblast': {
+    bp: 150,
+    type: 'Grass',
+    mindBlownRecoil: true,
+    category: 'Special',
+    zp: 200,
+    maxPower: 150,
   },
   'Collision Course': {
     bp: 100,
@@ -4240,8 +4306,8 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     secondaries: true,
   },
   Comeuppance: {
-    bp: 1,
-    type: 'Fighting',
+    bp: 0,
+    type: 'Dark',
     category: 'Physical',
     zp: 100,
     maxPower: 100,
@@ -4260,6 +4326,15 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     maxPower: 140,
     makesContact: true,
   },
+  'Dire Claw': {
+    bp: 80,
+    type: 'Poison',
+    category: 'Physical',
+    zp: 160,
+    maxPower: 90,
+    makesContact: true,
+    secondaries: true,
+  },
   'Electro Drift': {
     bp: 100,
     type: 'Electric',
@@ -4267,6 +4342,14 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 180,
     maxPower: 130,
     makesContact: true, // deals 1.3x on super effective
+  },
+  'Esper Wing': {
+    bp: 80,
+    type: 'Psychic',
+    category: 'Special',
+    zp: 160,
+    maxPower: 130,
+    secondaries: true,
   },
   'Fillet Away': {
     bp: 0,
@@ -4279,7 +4362,7 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     category: 'Physical',
     willCrit: true,
     zp: 140,
-    maxPower: 130,
+    maxPower: 120,
   },
   'Gigaton Hammer': {
     bp: 160,
@@ -4303,6 +4386,7 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 190,
     maxPower: 140,
     makesContact: true,
+    isPunch: true,
   },
   'Hyper Drill': {
     bp: 100,
@@ -4321,6 +4405,14 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     maxPower: 130,
     makesContact: true,
   },
+  'Infernal Parade': {
+    bp: 60,
+    type: 'Ghost',
+    category: 'Special',
+    zp: 120,
+    maxPower: 110,
+    secondaries: true,
+  },
   'Jet Punch': {
     bp: 60,
     type: 'Water',
@@ -4330,6 +4422,7 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     makesContact: true,
     isPunch: true,
     priority: 1,
+    // Sheer Force boost implemented in gen789.ts
   },
   'Kowtow Cleave': {
     bp: 85,
@@ -4338,6 +4431,7 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 160,
     maxPower: 130,
     makesContact: true,
+    isSlicing: true,
   },
   'Last Respects': {
     bp: 50,
@@ -4353,7 +4447,11 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 160,
     maxPower: 130,
     secondaries: true,
-    self: {boosts: {spd: -2}},
+  },
+  'Lunar Blessing': {
+    bp: 0,
+    type: 'Psychic',
+    category: 'Status',
   },
   'Magical Torque': {
     bp: 100,
@@ -4370,6 +4468,7 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 190,
     maxPower: 140,
     target: 'allAdjacentFoes',
+    self: {boosts: {spa: -1}},
   },
   'Mortal Spin': {
     bp: 30,
@@ -4380,6 +4479,22 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     makesContact: true,
     secondaries: true,
     target: 'allAdjacentFoes',
+  },
+  'Mountain Gale': {
+    bp: 100,
+    type: 'Ice',
+    category: 'Physical',
+    zp: 180,
+    maxPower: 130,
+    secondaries: true,
+  },
+  'Mystical Power': {
+    bp: 70,
+    type: 'Psychic',
+    category: 'Special',
+    zp: 140,
+    maxPower: 120,
+    secondaries: true,
   },
   'Noxious Torque': {
     bp: 100,
@@ -4396,6 +4511,7 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 160,
     maxPower: 130,
     isPulse: true,
+    // Sheer Force boost implemented in gen789.ts
   },
   'Population Bomb': {
     bp: 20,
@@ -4404,6 +4520,7 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 100,
     maxPower: 90,
     makesContact: true,
+    isSlicing: true,
     multihit: 10,
   },
   Pounce: {
@@ -4412,6 +4529,20 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     category: 'Physical',
     zp: 100,
     maxPower: 100,
+    makesContact: true,
+    secondaries: true,
+  },
+  'Power Shift': {
+    bp: 0,
+    type: 'Normal',
+    category: 'Status',
+  },
+  'Psyshield Bash': {
+    bp: 70,
+    type: 'Psychic',
+    category: 'Physical',
+    zp: 140,
+    maxPower: 120,
     makesContact: true,
     secondaries: true,
   },
@@ -4432,13 +4563,20 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     maxPower: 130,
     makesContact: true,
   },
+  'Raging Fury': {
+    bp: 120,
+    type: 'Fire',
+    category: 'Physical',
+    zp: 190,
+    maxPower: 140,
+  },
   'Revival Blessing': {
     bp: 0,
     type: 'Normal',
     category: 'Status',
   },
   Ruination: {
-    bp: 1,
+    bp: 0,
     type: 'Dark',
     category: 'Special',
     zp: 100,
@@ -4450,6 +4588,43 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     category: 'Physical',
     zp: 100,
     maxPower: 90,
+    secondaries: true,
+  },
+  'Sandsear Storm': {
+    bp: 100,
+    type: 'Ground',
+    category: 'Special',
+    zp: 180,
+    maxPower: 130,
+    secondaries: true,
+    isWind: true,
+    target: 'allAdjacentFoes',
+  },
+  'Shed Tail': {
+    bp: 0,
+    type: 'Normal',
+    category: 'Status',
+  },
+  Shelter: {
+    bp: 0,
+    type: 'Steel',
+    category: 'Status',
+  },
+  'Silk Trap': {
+    bp: 0,
+    type: 'Bug',
+    category: 'Status',
+    priority: 4,
+  },
+  Snowscape: {
+    bp: 0,
+    type: 'Ice',
+    category: 'Status',
+  },
+  'Spicy Extract': {
+    bp: 0,
+    type: 'Grass',
+    category: 'Status',
   },
   'Spin Out': {
     bp: 100,
@@ -4458,7 +4633,31 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 180,
     maxPower: 130,
     makesContact: true,
-    self: {boosts: {spe: -2}},
+  },
+  'Springtide Storm': {
+    bp: 100,
+    type: 'Fairy',
+    category: 'Special',
+    zp: 180,
+    maxPower: 130,
+    secondaries: true,
+    isWind: true,
+    target: 'allAdjacentFoes',
+  },
+  'Stone Axe': {
+    bp: 65,
+    type: 'Rock',
+    category: 'Physical',
+    zp: 120,
+    maxPower: 120,
+    makesContact: true,
+    isSlicing: true,
+    secondaries: true,
+  },
+  'Take Heart': {
+    bp: 0,
+    type: 'Psychic',
+    category: 'Status',
   },
   'Tera Blast': {
     bp: 80,
@@ -4489,7 +4688,14 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     maxPower: 100,
     secondaries: true,
     makesContact: true,
-    self: {boosts: {spe: +1}},
+  },
+  'Triple Arrows': {
+    bp: 90,
+    type: 'Fighting',
+    category: 'Physical',
+    zp: 175,
+    maxPower: 90,
+    secondaries: true,
   },
   'Triple Dive': {
     bp: 30,
@@ -4508,12 +4714,17 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     maxPower: 90,
     multihit: 2,
   },
+  'Victory Dance': {
+    bp: 0,
+    type: 'Fighting',
+    category: 'Status',
+  },
   'Wave Crash': {
     bp: 120,
     type: 'Water',
     category: 'Physical',
-    zp: 160,
-    maxPower: 130,
+    zp: 190,
+    maxPower: 140,
     makesContact: true,
     recoil: [33, 100],
   },
@@ -4524,6 +4735,16 @@ const SV_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     zp: 160,
     maxPower: 130,
     secondaries: true,
+  },
+  'Wildbolt Storm': {
+    bp: 100,
+    type: 'Electric',
+    category: 'Special',
+    zp: 180,
+    maxPower: 130,
+    secondaries: true,
+    isWind: true,
+    target: 'allAdjacentFoes',
   },
 };
 
@@ -4596,6 +4817,7 @@ class Move implements I.Move {
     'zp',
     'maxPower',
     'isSlicing',
+    'isWind',
   ]);
 
   constructor(name: string, data: MoveData, gen: number) {
@@ -4612,6 +4834,7 @@ class Move implements I.Move {
     if (data.isSound) this.flags.sound = 1;
     if (data.isPulse) this.flags.pulse = 1;
     if (data.isSlicing) this.flags.slicing = 1;
+    if (data.isWind) this.flags.wind = 1;
 
     assignWithout(this, data, Move.FLAGS);
 

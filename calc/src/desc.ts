@@ -14,12 +14,19 @@ export interface RawDesc {
   attackerAbility?: string;
   attackerItem?: string;
   attackerName: string;
+  attackerTera?: string;
   defenderAbility?: string;
   defenderItem?: string;
   defenderName: string;
+  defenderTera?: string;
   defenseBoost?: number;
   defenseEVs?: string;
   hits?: number;
+  alliesFainted?: number;
+  isBeadsOfRuin?: boolean;
+  isSwordOfRuin?: boolean;
+  isTabletsOfRuin?: boolean;
+  isVesselOfRuin?: boolean;
   isAuroraVeil?: boolean;
   isFlowerGiftAttacker?: boolean;
   isFlowerGiftDefender?: boolean;
@@ -125,8 +132,12 @@ export function getRecovery(
     const percentHealed = move.drain[0] / move.drain[1];
     const max = Math.round(defender.maxHP() * percentHealed);
     for (let i = 0; i < minD.length; i++) {
-      recovery[0] += Math.min(Math.round(minD[i] * move.hits * percentHealed), max);
-      recovery[1] += Math.min(Math.round(maxD[i] * move.hits * percentHealed), max);
+      const range = [minD[i], maxD[i]];
+      for (const j in recovery) {
+        let drained = Math.round(range[j] * percentHealed);
+        if (attacker.hasItem('Big Root')) drained = Math.trunc(drained * 5324 / 4096);
+        recovery[j] += Math.min(drained * move.hits, max);
+      }
     }
   }
 
@@ -506,14 +517,15 @@ function getEndOfTurn(
       damage -= Math.floor(defender.maxHP() / (gen.num === 2 ? 8 : 16));
       texts.push('sandstorm damage');
     }
-  } else if (field.hasWeather('Hail')) {
+  } else if (field.hasWeather('Hail', 'Snow')) {
     if (defender.hasAbility('Ice Body')) {
       damage += Math.floor(defender.maxHP() / 16);
       texts.push('Ice Body recovery');
     } else if (
       !defender.hasType('Ice') &&
       !defender.hasAbility('Magic Guard', 'Overcoat', 'Snow Cloak') &&
-      !defender.hasItem('Safety Goggles')
+      !defender.hasItem('Safety Goggles') &&
+      field.hasWeather('Hail')
     ) {
       damage -= Math.floor(defender.maxHP() / 16);
       texts.push('hail damage');
@@ -546,11 +558,13 @@ function getEndOfTurn(
   }
 
   if (field.attackerSide.isSeeded && !attacker.hasAbility('Magic Guard')) {
+    let recovery = Math.floor(attacker.maxHP() / (gen.num >= 2 ? 8 : 16));
+    if (defender.hasItem('Big Root')) recovery = Math.trunc(recovery * 5324 / 4096);
     if (attacker.hasAbility('Liquid Ooze')) {
-      damage -= Math.floor(attacker.maxHP() / (gen.num >= 2 ? 8 : 16));
+      damage -= recovery;
       texts.push('Liquid Ooze damage');
     } else {
-      damage += Math.floor(attacker.maxHP() / (gen.num >= 2 ? 8 : 16));
+      damage += recovery;
       texts.push('Leech Seed recovery');
     }
   }
@@ -602,6 +616,12 @@ function getEndOfTurn(
       damage -= gen.num > 5 ? Math.floor(defender.maxHP() / 8) : Math.floor(defender.maxHP() / 16);
       texts.push('trapping damage');
     }
+  }
+  if (defender.isSaltCure && !defender.hasAbility('Magic Guard')) {
+    const isWaterOrSteel = defender.hasType('Water', 'Steel') ||
+      (defender.teraType && ['Water', 'Steel'].includes(defender.teraType));
+    damage -= Math.floor(defender.maxHP() / (isWaterOrSteel ? 4 : 8));
+    texts.push('Salt Cure');
   }
   if (!defender.hasType('Fire') && !defender.hasAbility('Magic Guard') &&
       (move.named('Fire Pledge (Grass Pledge Boosted)', 'Grass Pledge (Fire Pledge Boosted)'))) {
@@ -835,6 +855,19 @@ function buildDescription(description: RawDesc, attacker: Pokemon, defender: Pok
   if (description.isBurned) {
     output += 'burned ';
   }
+  if (description.alliesFainted) {
+    output += Math.min(5, description.alliesFainted) +
+      ` ${description.alliesFainted === 1 ? 'ally' : 'allies'} fainted `;
+  }
+  if (description.attackerTera) {
+    output += `Tera ${description.attackerTera} `;
+  }
+  if (description.isBeadsOfRuin) {
+    output += 'Beads of Ruin ';
+  }
+  if (description.isSwordOfRuin) {
+    output += 'Sword of Ruin ';
+  }
   output += description.attackerName + ' ';
   if (description.isHelpingHand) {
     output += 'Helping Hand ';
@@ -877,11 +910,20 @@ function buildDescription(description: RawDesc, attacker: Pokemon, defender: Pok
   }
   output = appendIfSet(output, description.defenderItem);
   output = appendIfSet(output, description.defenderAbility);
+  if (description.isTabletsOfRuin) {
+    output += 'Tablets of Ruin ';
+  }
+  if (description.isVesselOfRuin) {
+    output += 'Vessel of Ruin ';
+  }
   if (description.isProtected) {
     output += 'protected ';
   }
   if (description.isDefenderDynamaxed) {
     output += 'Dynamax ';
+  }
+  if (description.defenderTera) {
+    output += `Tera ${description.defenderTera} `;
   }
   output += description.defenderName;
   if (description.weather && description.terrain) {

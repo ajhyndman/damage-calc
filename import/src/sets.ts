@@ -26,6 +26,7 @@ interface PokemonSet {
   ability?: string;
   item?: string;
   nature?: string;
+  teraType?: string;
   ivs?: Partial<StatsTable>;
   evs?: Partial<StatsTable>;
   moves: string[];
@@ -76,7 +77,7 @@ const TO_FORMAT: {[tier in Tier]?: Format} = {
   '(OU)': 'OU',
 };
 
-const RECENT_ONLY: Format[] = ['Monotype', 'BH', 'CAP', '1v1'];
+const RECENT_ONLY: Format[] = ['Monotype', 'BH'];
 
 const GENS = ['RBY', 'GSC', 'ADV', 'DPP', 'BW', 'XY', 'SM', 'SS', 'SV'];
 const USAGE = ['OU', 'UU', 'RU', 'NU', 'PU', 'ZU', 'Uber', 'LC', 'Doubles'];
@@ -89,9 +90,9 @@ export async function importSets(dir: string) {
     for (const pokemon of Object.keys(calc.SPECIES[gen]).sort()) {
       await importSetsForPokemon(pokemon, gen, setsByPokemon);
       let sets = setsByPokemon[pokemon];
-      // If we can't find any sets for Gen 8 yet, just copy the Gen 7 sets instead...
+      // If we can't find any sets for Gen 9 yet, just copy the Gen 8 sets instead...
       if (!sets && gen === 9) {
-        await importSetsForPokemon(pokemon, 7, setsByPokemon);
+        await importSetsForPokemon(pokemon, 8, setsByPokemon);
         sets = setsByPokemon[pokemon];
       }
       if (sets) {
@@ -129,7 +130,7 @@ async function importSetsForPokemon(
 ) {
   for (const format in FORMATS) {
     const data = await ps.forFormat(`gen${gen}${FORMATS[format]}`);
-    if (!data || (gen < 7 && RECENT_ONLY.includes(format as Format))) continue;
+    if (!data || (gen < 8 && RECENT_ONLY.includes(format as Format))) continue;
     const forme = toForme(pokemon);
     const smogon = data['dex'];
     if (smogon?.[forme]) {
@@ -183,6 +184,8 @@ function toCalc(set: ps.DeepPartial<ps.PokemonSet>): PokemonSet {
     ability: set.ability, // TODO fixed?
     item: set.item,
     nature: set.nature,
+    // @ts-ignore - npm pkg not updated yet
+    teraType: set.teraType,
     ivs: set.ivs && toStatsTable(set.ivs),
     evs: set.evs && toStatsTable(set.evs),
     moves: set.moves || [],

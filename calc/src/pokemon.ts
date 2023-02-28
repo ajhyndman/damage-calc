@@ -20,6 +20,8 @@ export class Pokemon implements State.Pokemon {
   ability?: I.AbilityName;
   abilityOn?: boolean;
   isDynamaxed?: boolean;
+  isSaltCure?: boolean;
+  alliesFainted?: number;
   item?: I.ItemName;
   teraType?: I.TypeName;
 
@@ -59,6 +61,8 @@ export class Pokemon implements State.Pokemon {
     this.abilityOn = !!options.abilityOn;
 
     this.isDynamaxed = !!options.isDynamaxed;
+    this.isSaltCure = !!options.isSaltCure;
+    this.alliesFainted = options.alliesFainted;
     this.teraType = options.teraType;
     this.item = options.item;
     this.nature = options.nature || ('Serious' as I.NatureName);
@@ -126,6 +130,14 @@ export class Pokemon implements State.Pokemon {
 
   hasType(...types: I.TypeName[]) {
     for (const type of types) {
+      if (this.teraType ? this.teraType === type : this.types.includes(type)) return true;
+    }
+    return false;
+  }
+
+  /** Ignores Tera type */
+  hasOriginalType(...types: I.TypeName[]) {
+    for (const type of types) {
       if (this.types.includes(type)) return true;
     }
     return false;
@@ -141,6 +153,8 @@ export class Pokemon implements State.Pokemon {
       ability: this.ability,
       abilityOn: this.abilityOn,
       isDynamaxed: this.isDynamaxed,
+      isSaltCure: this.isSaltCure,
+      alliesFainted: this.alliesFainted,
       item: this.item,
       gender: this.gender,
       nature: this.nature,
