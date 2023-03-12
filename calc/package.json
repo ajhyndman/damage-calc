@@ -10,6 +10,10 @@
     "Austin Couturier <austincouturier@icloud.com>"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": ["dist"],
   "dependencies": {
     "@types/node": "^18.14.2"
   },
@@ -26,7 +30,6 @@
     "ts-jest": "^29.0.5",
     "typescript": "^4.9.5"
   },
-  "files": ["dist"],
   "scripts": {
     "lint": "eslint --cache src --ext ts",
     "fix": "eslint --fix src --ext ts",
