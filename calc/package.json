@@ -1,6 +1,6 @@
 {
   "name": "@ajhyndman/smogon-calc",
-  "version": "0.7.0",
+  "version": "0.8.0-0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "unpkg": "dist/production.min.js",
@@ -13,7 +13,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "@types/node": "^18.14.2"
   },
