@@ -14,7 +14,9 @@
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md"
   ],
   "dependencies": {
     "@types/node": "^18.14.2"
