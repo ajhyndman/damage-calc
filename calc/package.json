@@ -1,5 +1,5 @@
 {
-  "name": "@smogon/calc",
+  "name": "@ajhyndman/smogon-calc",
   "version": "0.7.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
