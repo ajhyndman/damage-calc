@@ -1,0 +1,10 @@
+# config files
+.eslintignore
+.eslintrc
+bundle
+jest.config.js
+package-lock.json
+tsconfig.json
+
+# src directory
+src
